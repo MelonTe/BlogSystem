@@ -7,8 +7,6 @@ import (
 	"BlogSystem/internal/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"       // swagger embed files
-	"github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"time"
 )
 
@@ -40,3 +38,5 @@ func InitRouter() *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return r
 }
+
+// 测试

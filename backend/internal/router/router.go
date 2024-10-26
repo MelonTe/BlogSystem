@@ -7,7 +7,6 @@ import (
 	"BlogSystem/internal/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"time"
 )
@@ -41,4 +40,4 @@ func InitRouter() *gin.Engine {
 	return r
 }
 
-// 测试
+// 测试sssssssssssssss

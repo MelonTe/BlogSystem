@@ -9,7 +9,7 @@ import (
 var OSSClient *oss.Client
 var OSSBucket *oss.Bucket
 
-func init() {
+func init1() {
 	//从环境变量获取访问凭证
 	provider, err := oss.NewEnvironmentVariableCredentialsProvider()
 	if err != nil {

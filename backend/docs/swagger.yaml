@@ -4,6 +4,10 @@ definitions:
       blogname:
         description: 需要的博客名关键字
         type: string
+      end:
+        type: integer
+      start:
+        type: integer
       tag:
         description: 需要的博客对应标签
         items:
@@ -105,7 +109,7 @@ definitions:
         description: token字段
         type: string
     type: object
-host: 127.0.0.1:8080
+host: 127.0.0.1:8080s
 info:
   contact: {}
   description: |-
@@ -303,7 +307,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: 可以按照请求中的参数，根据时间排序、标签筛选、标题关键词搜索的方式获取博客，如果参数为空表示获取所有的博客简略，关键词和标签必须一个为空
+      description: |-
+        可以按照请求中的参数，根据时间排序、标签筛选、标题关键词搜索的方式获取博客，如果参数为空表示获取所有的博客简略，关键词和标签必须一个为空
+        请求中可以标明返回的博客数量范围，例如1-10表示按时间排序的第一篇到第十篇博客
       parameters:
       - description: 字段为空表示获取所有博客
         in: body

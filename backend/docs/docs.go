@@ -340,7 +340,7 @@ const docTemplate = `{
         },
         "/bloglist": {
             "post": {
-                "description": "可以按照请求中的参数，根据时间排序、标签筛选、标题关键词搜索的方式获取博客，如果参数为空表示获取所有的博客简略，关键词和标签必须一个为空",
+                "description": "可以按照请求中的参数，根据时间排序、标签筛选、标题关键词搜索的方式获取博客，如果参数为空表示获取所有的博客简略，关键词和标签必须一个为空\n请求中可以标明返回的博客数量范围，例如1-10表示按时间排序的第一篇到第十篇博客",
                 "consumes": [
                     "application/json"
                 ],
@@ -562,6 +562,12 @@ const docTemplate = `{
                     "description": "需要的博客名关键字",
                     "type": "string"
                 },
+                "end": {
+                    "type": "integer"
+                },
+                "start": {
+                    "type": "integer"
+                },
                 "tag": {
                     "description": "需要的博客对应标签",
                     "type": "array",
@@ -728,7 +734,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "127.0.0.1:8080",
+	Host:             "127.0.0.1:8080s",
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "博客系统",

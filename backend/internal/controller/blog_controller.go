@@ -14,6 +14,7 @@ import (
 // GetBlogHandler godoc
 // @Summary 该接口用于获取所有博文简略，每个博文的内容前100字
 // @Description 可以按照请求中的参数，根据时间排序、标签筛选、标题关键词搜索的方式获取博客，如果参数为空表示获取所有的博客简略，关键词和标签必须一个为空
+// @Description 请求中可以标明返回的博客数量范围，例如1-10表示按时间排序的第一篇到第十篇博客
 // @Tags Blog
 // @Accept json
 // @Produce json

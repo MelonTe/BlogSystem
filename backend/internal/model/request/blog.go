@@ -6,6 +6,8 @@ package request
 type BlogCriteria struct {
 	BlogName string   `json:"blogname"` //需要的博客名关键字
 	Tag      []string `json:"tag"`      //需要的博客对应标签
+	Start    int      `json:"start"`
+	End      int      `json:"end"`
 }
 
 type BlogWithName struct {

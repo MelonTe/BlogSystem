@@ -14,7 +14,7 @@ import (
 var DB *gorm.DB
 
 // Init初始化mysql
-func init() {
+func init1() {
 	//构建mysql连接字符串
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.DBUser,

@@ -5,6 +5,7 @@ go 1.22.4
 require github.com/gin-gonic/gin v1.10.0
 
 require (
+	github.com/aliyun/alibabacloud-oss-go-sdk-v2 v1.1.2 // indirect
 	github.com/gin-contrib/cors v1.7.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect

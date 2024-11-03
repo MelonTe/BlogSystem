@@ -2,45 +2,53 @@ package oss
 
 import (
 	"BlogSystem/config"
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"context"
+	"fmt"
+	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss"
+	"github.com/aliyun/alibabacloud-oss-go-sdk-v2/oss/credentials"
 	"log"
+	"os"
 )
 
-var OSSClient *oss.Client
-var OSSBucket *oss.Bucket
+//使用阿里云OSS GO SDK V2
 
-func init1() {
-	//从环境变量获取访问凭证
-	provider, err := oss.NewEnvironmentVariableCredentialsProvider()
+var OSSClient *oss.Client
+
+// 使用环境变量注入AK
+func init() {
+	provider := credentials.NewEnvironmentVariableCredentialsProvider()
+	cfg := oss.LoadDefaultConfig().
+		WithCredentialsProvider(provider). //获取AK
+		WithRegion(config.OSSRegion).      //设置region
+		WithEndpoint("melonte.xyz").       //绑定自定义域名访问
+		WithUseCName(true).
+		WithInsecureSkipVerify(true)
+	client := oss.NewClient(cfg)
+	// 检查连接性，通过查看bucket来测试
+	_, err := client.GetBucketInfo(context.Background(), &oss.GetBucketInfoRequest{
+		Bucket: oss.Ptr("softeng-blog"),
+	})
 	if err != nil {
-		log.Fatalf("Can't get OSS credentials: %w", err)
+		log.Println("无法连接到OSS服务器:", err)
+		os.Exit(1)
+	} else {
+		log.Println("成功连接到OSS服务器")
 	}
-	//创建OSSClient实例，注入AK，规定使用v4签名，使用V4签名需要指定发起请求的地域标识
-	client, err := oss.New(config.OSSEndPoint, "", "", oss.SetCredentialsProvider(&provider), oss.AuthVersion(oss.AuthV4), oss.Region(config.OSSRegion))
-	if err != nil {
-		log.Fatalf("Can't init OSSClient: %w", err)
-	}
+
 	OSSClient = client
-	bucket, err := client.Bucket(config.OSSBucketName)
-	if err != nil {
-		log.Fatalf("Can't init OSSBucket: %v", err)
-	}
-	OSSBucket = bucket
 }
 
 // 上传一张图片，返回其URL
-// OSSdir为OSSbucket中的路径昵称，首目录应该为blog的昵称，例如"/exampleBlog/exampleImg.png"
+// OSSdir为OSSbucket中的路径昵称，首目录应该为blog的昵称，例如"exampleBlog/exampleImg.png"
 // Imgdir为Img处在的本地路径
 func UploadImg(OSSdir string, Imgdir string) (string, error) {
-	err := OSSBucket.PutObjectFromFile(OSSdir, Imgdir)
+	//将图片上传至OSS
+	_, err := OSSClient.PutObjectFromFile(context.TODO(), &oss.PutObjectRequest{
+		Bucket: oss.Ptr(config.OSSBucketName),
+		Key:    oss.Ptr(OSSdir),
+	}, Imgdir)
 	if err != nil {
-		log.Printf("Upload img to OSSBucket failed: %v", err)
 		return "", err
 	}
-	signedURL, err := OSSBucket.SignURL(OSSdir, oss.HTTPGet, 10000*60*60*24)
-	if err != nil {
-		log.Printf("Get URL failed: %v", err)
-		return "", err
-	}
-	return signedURL, nil
+	return fmt.Sprintf("http://melonte.xyz/%s", OSSdir), nil
 }

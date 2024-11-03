@@ -16,7 +16,7 @@ import (
 // @in header
 // @name Authorization
 
-// @host 127.0.0.1:8080s
+// @host 127.0.0.1:8080
 // @BasePath/
 func main() {
 	r := router.InitRouter()

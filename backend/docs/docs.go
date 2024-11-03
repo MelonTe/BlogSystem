@@ -292,6 +292,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/blogandtagnums": {
+            "get": {
+                "description": "该接口用于获取博客数量和标签数量，不需要传递参数",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "该接口用于获取博客数量和标签数量",
+                "responses": {
+                    "200": {
+                        "description": "请求成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.BlogAndTagNums"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/blogitem": {
             "post": {
                 "description": "依据博客标题获取单篇博客详情",
@@ -640,6 +675,17 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "response.BlogAndTagNums": {
+            "type": "object",
+            "properties": {
+                "blogcount": {
+                    "type": "integer"
+                },
+                "tagcount": {
+                    "type": "integer"
                 }
             }
         },

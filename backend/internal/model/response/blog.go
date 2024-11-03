@@ -7,3 +7,8 @@ type BlogWithTag struct {
 	table.Blog
 	Tag []string `json:"tag"` //Blog对应的标签
 }
+
+type BlogAndTagNums struct {
+	BlogCount uint `json:"blogcount"`
+	TagCount  uint `json:"tagcount"`
+}

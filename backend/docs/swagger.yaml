@@ -57,6 +57,13 @@ definitions:
     - createdtime
     - message
     type: object
+  response.BlogAndTagNums:
+    properties:
+      blogcount:
+        type: integer
+      tagcount:
+        type: integer
+    type: object
   response.BlogWithTag:
     properties:
       content:
@@ -274,6 +281,26 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 该接口用于接受博文进行上传
+      tags:
+      - Blog
+  /blogandtagnums:
+    get:
+      consumes:
+      - application/json
+      description: 该接口用于获取博客数量和标签数量，不需要传递参数
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 请求成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.BlogAndTagNums'
+              type: object
+      summary: 该接口用于获取博客数量和标签数量
       tags:
       - Blog
   /blogitem:

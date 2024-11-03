@@ -1,6 +1,7 @@
 package service
 
 import (
+	"BlogSystem/internal/model/response"
 	"BlogSystem/internal/model/table"
 	"BlogSystem/internal/pkg/db"
 	"BlogSystem/internal/pkg/oss"
@@ -210,4 +211,17 @@ func uploadBlogWithTag(db *gorm.DB, blog *table.Blog, tags []string) error {
 		}
 	}
 	return nil
+}
+
+// 该方法用于获取存储的博客和标签数量
+func BlogAndTagNums() response.BlogAndTagNums {
+	db := db.GetDB()
+	var tags []table.Tag
+	var blog []table.Blog
+	var NumsCount response.BlogAndTagNums
+	result := db.Find(&tags)
+	NumsCount.TagCount = uint(result.RowsAffected)
+	result = db.Find(&blog)
+	NumsCount.BlogCount = uint(result.RowsAffected)
+	return NumsCount
 }

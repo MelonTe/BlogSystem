@@ -29,6 +29,7 @@ func InitRouter() *gin.Engine {
 
 	//不受保护的接口
 	r.POST("/blog", controller.GetBlogListHandler)
+	r.GET("/blogandtagnums", controller.GetBlogAndTagNumsHandler)
 
 	//受保护的api接口，需要中间件认证
 	protected := r.Group("/api")

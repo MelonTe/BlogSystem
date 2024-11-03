@@ -128,3 +128,16 @@ func UpdateBlogHandler(c *gin.Context) {}
 // @Success 200 {object} response.Response{data=response.BlogWithTag} "请求成功"
 // @Router /blogitem [POST]
 func GetBlogItemHandler(c *gin.Context) {}
+
+// GetBlogAndTagNumsHandler godoc
+// @Summary 该接口用于获取博客数量和标签数量
+// @Description 该接口用于获取博客数量和标签数量，不需要传递参数
+// @Tags Blog
+// @Accept json
+// @Produce json
+// @Success 200 {object} response.Response{data=response.BlogAndTagNums} "请求成功"
+// @Router /blogandtagnums [GET]
+func GetBlogAndTagNumsHandler(c *gin.Context) {
+	res := service.BlogAndTagNums()
+	response.ResponseSuccess(c, res)
+}

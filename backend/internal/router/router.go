@@ -29,13 +29,17 @@ func InitRouter() *gin.Engine {
 
 	//不受保护的接口
 	r.POST("/blog", controller.GetBlogListHandler)
+	r.POST("/message", controller.UploadMessageHandler)
+
 	r.GET("/blogandtagnums", controller.GetBlogAndTagNumsHandler)
+	r.GET("/message", controller.GetMessageHandler)
 
 	//受保护的api接口，需要中间件认证
 	protected := r.Group("/api")
 	protected.Use(auth.JWTAuthMiddleWare())
 	{
 		protected.POST("/uploadblog", controller.UploadBlogHandler)
+		protected.DELETE("/message", controller.DeleteMessageHandler)
 	}
 	//接口文档浏览
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

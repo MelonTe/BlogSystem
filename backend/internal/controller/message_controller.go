@@ -39,7 +39,7 @@ func UploadMessageHandler(c *gin.Context) {
 		return
 	}
 	// 留言成功 返回结果
-	c.JSON(http.StatusOK, response.ResponseSuccess)
+	response.ResponseSuccess(c, nil)
 }
 
 // DeleteMessageHandler godoc
@@ -69,7 +69,7 @@ func DeleteMessageHandler(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, response.ResponseSuccess)
+	response.ResponseSuccess(c, nil)
 }
 
 // GetMessageHandler godoc
@@ -91,7 +91,7 @@ func GetMessageHandler(c *gin.Context) {
 	}
 	// 返回留言数据
 	c.JSON(http.StatusOK, response.Response{
-		Code:    400,
+		Code:    200,
 		Data:    messages,
 		Message: "获取全部留言成功",
 		Success: true,

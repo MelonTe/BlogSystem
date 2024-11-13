@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    caret-color: transparent;
+}
+
+.outline {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 1.5em;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.header .icon {
+    color: orange;
+    margin-right: 5px;
+}
+
+ul {
+    overflow-y: auto;
+    list-style: none;
+    border: 2px solid rgba(255, 165, 0, 0.2);
+    border-radius: 0.1em;
+    max-height: 30vh;
+    padding: 10px;
+}
+
+ul::-webkit-scrollbar {
+    display: none;
+}
+
+.li-text {
+    display: flex;
+    align-items: center;
+    height: 1em;
+    margin: 0.3em 0;
+    padding: 8px 15px;
+    background-color: #fff;
+    border-radius: 1em;
+    font-weight: 500;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.li-text:hover {
+    background-color: #e6f7ff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.li-text.active {
+    font-weight: 600;
+    color: #1890ff;
+    background-color: #f0f8ff;
+}
+
+.icon {
+    margin-right: 5px;
+    color: #f4b544;
+    font-size: 1.2em;
+}
+
+.text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Transition组件切换动效 */
+.fade-enter-active {
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.fade-enter-from {
+    height: 0;
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.fade-enter-to {
+    opacity: 1;
+    transform: translateX(0px);
+}

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"BlogSystem/internal/model/request"
 	"BlogSystem/internal/model/response"
 	"BlogSystem/internal/model/table"
 	"BlogSystem/internal/pkg/db"
@@ -224,4 +225,136 @@ func BlogAndTagNums() response.BlogAndTagNums {
 	result = db.Find(&blog)
 	NumsCount.BlogCount = uint(result.RowsAffected)
 	return NumsCount
+}
+
+func GetBlogList(criteria request.BlogCriteria) ([]response.BlogWithTag, error) {
+	var blogs []table.Blog
+	var result []response.BlogWithTag
+
+	// 构建查询条件
+	query := db.DB.Model(&table.Blog{})
+
+	// 根据博客名关键字进行筛选
+	if criteria.BlogName != "" {
+		query = query.Where("title LIKE ?", "%"+criteria.BlogName+"%")
+	}
+
+	// 根据标签进行筛选
+	if len(criteria.Tag) > 0 {
+		query = query.Joins("JOIN blog_tags ON blog_tags.blog_title = blogs.title").
+			Where("blog_tags.tag_name IN ?", criteria.Tag).
+			Group("blogs.id")
+	}
+
+	// 根据时间排序
+	query = query.Order("created_at DESC")
+
+	// 获取博客数量范围
+	if criteria.Start < 0 || criteria.End < criteria.Start {
+		return nil, errors.New("invalid start or end range")
+	}
+
+	// 查询博客
+	if err := query.Offset(criteria.Start - 1).Limit(criteria.End - criteria.Start + 1).Find(&blogs).Error; err != nil {
+		return nil, err
+	}
+
+	// 查询博客对应的标签
+	for _, blog := range blogs {
+		var tags []string
+		if err := db.DB.Model(&table.BlogTag{}).Where("blog_title = ?", blog.Title).Pluck("tag_name", &tags).Error; err != nil {
+			return nil, err
+		}
+		result = append(result, response.BlogWithTag{
+			Blog: blog,
+			Tag:  tags,
+		})
+	}
+
+	return result, nil
+}
+
+func DeleteBlog(blogName string) error {
+	// 删除博客
+	if err := db.DB.Where("title = ?", blogName).Delete(&table.Blog{}).Error; err != nil {
+		return err
+	}
+
+	// 删除相关的标签
+	if err := db.DB.Where("blog_title = ?", blogName).Delete(&table.BlogTag{}).Error; err != nil {
+		return err
+	}
+
+	// todo 删除oss图片
+
+	return nil
+}
+
+func UpdateBlog(update request.BlogUpdate) error {
+	var blog table.Blog
+
+	// 查询博客是否存在
+	if err := db.DB.Where("title = ?", update.BlogName).First(&blog).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("blog not found")
+		}
+		return err
+	}
+
+	// 更新博客内容
+	blog.Content = update.Content
+	blog.Title = update.BlogName // 假设你允许更新标题
+	// 其他字段的更新可以在这里添加
+
+	if err := db.DB.Save(&blog).Error; err != nil {
+		return err
+	}
+
+	// 更新标签
+	if len(update.Tag) > 0 {
+		// 先删除旧标签
+		if err := db.DB.Where("blog_title = ?", blog.Title).Delete(&table.BlogTag{}).Error; err != nil {
+			return err
+		}
+
+		// 添加新标签
+		for _, tag := range update.Tag {
+			newTag := table.BlogTag{
+				BlogTitle: blog.Title,
+				TagName:   tag,
+			}
+			if err := db.DB.Create(&newTag).Error; err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func GetBlogItem(blogName string) (response.BlogWithTag, error) {
+	var blog table.Blog
+	var tags []string
+	var result response.BlogWithTag
+
+	// 查询单个博客
+	if err := db.DB.Where("title = ?", blogName).First(&blog).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return result, errors.New("blog not found")
+		}
+		return result, err
+	}
+
+	// 查询博客对应的标签
+	if err := db.DB.Model(&table.BlogTag{}).Where("blog_title = ?", blog.Title).Pluck("tag_name", &tags).Error; err != nil {
+		return result, err
+	}
+
+	// 构建返回结果
+	result = response.BlogWithTag{
+		Blog: blog,
+		Tag:  tags,
+	}
+
+	return result, nil
 }

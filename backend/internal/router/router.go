@@ -7,7 +7,7 @@ import (
 	"BlogSystem/internal/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/files"
+	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"time"
 )
@@ -26,24 +26,33 @@ func InitRouter() *gin.Engine {
 	}))
 	//使用中间件
 	r.Use(gin.Logger())
-
-	//不受保护的接口
-	r.POST("/blog", controller.GetBlogListHandler)
-	r.POST("/message", controller.UploadMessageHandler)
-
-	r.GET("/blogandtagnums", controller.GetBlogAndTagNumsHandler)
-	r.GET("/message", controller.GetMessageHandler)
-
 	//受保护的api接口，需要中间件认证
 	protected := r.Group("/api")
+
+	//接口文档浏览
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// --login--
+	r.POST("/login", controller.LoginHandler)
+
+	// --blog--
+	r.POST("/bloglist", controller.GetBlogListHandler)
+	r.POST("/blogitem", controller.GetBlogItemHandler)
+	r.GET("/blogandtagnums", controller.GetBlogAndTagNumsHandler)
 	protected.Use(auth.JWTAuthMiddleWare())
 	{
 		protected.POST("/uploadblog", controller.UploadBlogHandler)
+		protected.DELETE("/blog", controller.DeleteBlogHandler)
+		protected.PUT("/blog", controller.UpdateBlogHandler)
+	}
+
+	// --message--
+	r.POST("/message", controller.UploadMessageHandler)
+	r.GET("/message", controller.GetMessageHandler)
+	protected.Use(auth.JWTAuthMiddleWare())
+	{
 		protected.DELETE("/message", controller.DeleteMessageHandler)
 	}
-	//接口文档浏览
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	return r
 }
-
-// 测试sssssssssssssss

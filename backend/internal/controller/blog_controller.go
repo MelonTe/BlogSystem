@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"BlogSystem/internal/model/request"
 	_ "BlogSystem/internal/model/request"
 	"BlogSystem/internal/model/response"
 	_ "BlogSystem/internal/model/table"
@@ -21,7 +22,21 @@ import (
 // @Param criteria body request.BlogCriteria true "字段为空表示获取所有博客"
 // @Success 200 {object} response.Response{data=[]response.BlogWithTag} "请求成功"
 // @Router /bloglist [POST]
-func GetBlogListHandler(c *gin.Context) {}
+func GetBlogListHandler(c *gin.Context) {
+	var criteria request.BlogCriteria
+	if err := c.ShouldBindJSON(&criteria); err != nil {
+		response.ResponseFail(c, "请求参数错误", 400)
+		return
+	}
+
+	blogs, err := service.GetBlogList(criteria)
+	if err != nil {
+		response.ResponseFail(c, err.Error(), 500)
+		return
+	}
+
+	response.ResponseSuccess(c, blogs)
+}
 
 // UploadBlogHandler godoc
 // @Summary 该接口用于接受博文进行上传
@@ -103,7 +118,21 @@ func UploadBlogHandler(c *gin.Context) {
 // @Success 200 {object} response.Response{data=nil} "请求成功"
 // @Failure 400 {object} response.Response{data=nil} "错误提示"
 // @Router /api/blog [DELETE]
-func DeleteBlogHandler(c *gin.Context) {}
+func DeleteBlogHandler(c *gin.Context) {
+	blogName := c.Query("blogname")
+	if blogName == "" {
+		response.ResponseFail(c, "博客名称不能为空", 400)
+		return
+	}
+
+	err := service.DeleteBlog(blogName)
+	if err != nil {
+		response.ResponseFail(c, err.Error(), 500)
+		return
+	}
+
+	response.ResponseSuccess(c, nil)
+}
 
 // UpdateBlogHandler godoc
 // @Summary 该接口用于进行博文修改
@@ -116,7 +145,21 @@ func DeleteBlogHandler(c *gin.Context) {}
 // @Success 200 {object} response.Response{data=nil} "请求成功"
 // @Failure 400 {object} response.Response{data=nil} "错误提示"
 // @Router /api/blog [PUT]
-func UpdateBlogHandler(c *gin.Context) {}
+func UpdateBlogHandler(c *gin.Context) {
+	var update request.BlogUpdate
+	if err := c.ShouldBindJSON(&update); err != nil {
+		response.ResponseFail(c, "请求参数错误", 400)
+		return
+	}
+
+	err := service.UpdateBlog(update)
+	if err != nil {
+		response.ResponseFail(c, err.Error(), 500)
+		return
+	}
+
+	response.ResponseSuccess(c, nil)
+}
 
 // GetBlogHandler godoc
 // @Summary 该接口用于获取单篇博客详情内容
@@ -127,7 +170,21 @@ func UpdateBlogHandler(c *gin.Context) {}
 // @Param criteria body request.BlogWithName true "博客标题"
 // @Success 200 {object} response.Response{data=response.BlogWithTag} "请求成功"
 // @Router /blogitem [POST]
-func GetBlogItemHandler(c *gin.Context) {}
+func GetBlogItemHandler(c *gin.Context) {
+	var criteria request.BlogWithName
+	if err := c.ShouldBindJSON(&criteria); err != nil {
+		response.ResponseFail(c, "请求参数错误", 400)
+		return
+	}
+
+	blog, err := service.GetBlogItem(criteria.BlogName)
+	if err != nil {
+		response.ResponseFail(c, err.Error(), 500)
+		return
+	}
+
+	response.ResponseSuccess(c, blog)
+}
 
 // GetBlogAndTagNumsHandler godoc
 // @Summary 该接口用于获取博客数量和标签数量

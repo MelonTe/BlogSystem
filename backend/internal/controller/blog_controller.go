@@ -104,6 +104,9 @@ func UploadBlogHandler(c *gin.Context) {
 		return
 	}
 
+	//完成上传后，再清空一次，保持整洁度
+	service.DeleteAllFilesInDirectory("./internal/template")
+
 	response.ResponseSuccess(c, nil)
 }
 

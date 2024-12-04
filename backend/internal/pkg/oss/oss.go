@@ -52,3 +52,23 @@ func UploadImg(OSSdir string, Imgdir string) (string, error) {
 	}
 	return fmt.Sprintf("http://melonte.xyz/%s", OSSdir), nil
 }
+
+// 删除该博客下的所有图片,BlogName例子如“测试”,ImgsName为该博客下所有图片昵称的切片
+func DeleteBlogImgs(BlogName string, ImgsName []string) error {
+	BlogName += "/"
+	var DeleteObjects []oss.DeleteObject
+	for _, name := range ImgsName {
+		DeleteObjects = append(DeleteObjects, oss.DeleteObject{Key: oss.Ptr(BlogName + name)})
+	}
+	request := &oss.DeleteMultipleObjectsRequest{
+		Bucket:  oss.Ptr(config.OSSBucketName),
+		Objects: DeleteObjects,
+	}
+	result, err := OSSClient.DeleteMultipleObjects(context.TODO(), request)
+	if err != nil {
+		log.Fatalf("failed to delete multiple objects %v", err)
+		return err
+	}
+	log.Printf("delete multiple objects result:%#v\n", result)
+	return nil
+}

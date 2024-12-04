@@ -5,7 +5,7 @@ var (
 	DBHost     string = "127.0.0.1"
 	DBPort     string = "3306"
 	DBUser     string = "root"
-	DBPassword string = "delishaq1"
+	DBPassword string = "root"
 	DBName     string = "blogsystem"
 )
 

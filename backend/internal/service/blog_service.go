@@ -281,12 +281,43 @@ func DeleteBlog(blogName string) error {
 	}
 
 	// 删除相关的标签
-	if err := db.DB.Where("blog_title = ?", blogName).Delete(&table.BlogTag{}).Error; err != nil {
+	//首先获取博客下的所有标签
+	var blogtags []table.BlogTag
+	if err := db.DB.Where("blog_title = ?", blogName).Find(&blogtags).Error; err != nil {
 		return err
 	}
-
+	//将tag表中对应的tag数量-1
+	for _, v := range blogtags {
+		if err := db.DB.Model(&table.Tag{}).Where("name = ?", v.TagName).Update("count", gorm.Expr("count - ?", 1)).Error; err != nil {
+			return err
+		}
+	}
+	//将tag表中，count为0的tag删除
+	if err := db.DB.Where("count = 0").Delete(&table.Tag{}).Error; err != nil {
+		return err
+	}
+	//删除blogtags表中，该blog存在的标签
+	if err := db.DB.Delete(&blogtags).Error; err != nil {
+		return err
+	}
 	// todo 删除oss图片
-
+	//先获取该博客所有的图片的昵称
+	var blogimgs []table.Image
+	if err := db.DB.Where("blog_title = ?", blogName).Find(&blogimgs).Error; err != nil {
+		return err
+	}
+	imgs := make([]string, 0)
+	for _, v := range blogimgs {
+		imgs = append(imgs, v.Name)
+	}
+	//调用oss删除图片的接口
+	if err := oss.DeleteBlogImgs(blogName, imgs); err != nil {
+		return err
+	}
+	//最后，删除images表信息
+	if err := db.DB.Delete(&blogimgs).Error; err != nil {
+		return err
+	}
 	return nil
 }
 

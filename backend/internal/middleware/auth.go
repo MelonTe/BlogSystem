@@ -2,6 +2,7 @@
 package auth
 
 import (
+	"BlogSystem/internal/model/response"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -55,7 +56,7 @@ func ValidateJWT(tokenString string) (*MyClaims, error) {
 // 用于验证JWT的中间件
 func JWTAuthMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		/*tokenString := c.GetHeader("Authorization")
+		tokenString := c.GetHeader("Authorization")
 
 		//验证token
 		claims, err := ValidateJWT(tokenString)
@@ -67,7 +68,7 @@ func JWTAuthMiddleWare() gin.HandlerFunc {
 		}
 
 		//记录username
-		c.Set("username", claims.Username)*/
+		c.Set("username", claims.Username)
 		c.Next()
 	}
 }

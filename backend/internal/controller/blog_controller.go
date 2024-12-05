@@ -2,7 +2,6 @@ package controller
 
 import (
 	"BlogSystem/internal/model/request"
-	_ "BlogSystem/internal/model/request"
 	"BlogSystem/internal/model/response"
 	_ "BlogSystem/internal/model/table"
 	"BlogSystem/internal/service"

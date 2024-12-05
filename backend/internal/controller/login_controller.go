@@ -6,9 +6,8 @@ import (
 	"BlogSystem/internal/model/response"
 	_ "BlogSystem/internal/model/response"
 	"BlogSystem/internal/service"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // LoginHandler godoc

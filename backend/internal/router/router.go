@@ -32,16 +32,12 @@ func InitRouter() *gin.Engine {
 	//接口文档浏览
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// --login--
-	r.POST("/login", controller.LoginHandler)
-
 	// --blog--
-	r.POST("/bloglist", controller.GetBlogListHandler)
 	r.POST("/blogitem", controller.GetBlogItemHandler)
 	r.GET("/blogandtagnums", controller.GetBlogAndTagNumsHandler)
-	r.POST("/login",controller.LoginHandler)
-	r.GET("/tag",controller.GetTagHandler)
-	r.POST("/bloglist",controller.GetBlogListHandler)
+	r.POST("/login", controller.LoginHandler)
+	r.GET("/tag", controller.GetTagHandler)
+	r.POST("/bloglist", controller.GetBlogListHandler)
 	protected.Use(auth.JWTAuthMiddleWare())
 	{
 		protected.POST("/uploadblog", controller.UploadBlogHandler)

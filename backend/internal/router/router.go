@@ -39,6 +39,9 @@ func InitRouter() *gin.Engine {
 	r.POST("/bloglist", controller.GetBlogListHandler)
 	r.POST("/blogitem", controller.GetBlogItemHandler)
 	r.GET("/blogandtagnums", controller.GetBlogAndTagNumsHandler)
+	r.POST("/login",controller.LoginHandler)
+	r.GET("/tag",controller.GetTagHandler)
+	r.POST("/bloglist",controller.GetBlogListHandler)
 	protected.Use(auth.JWTAuthMiddleWare())
 	{
 		protected.POST("/uploadblog", controller.UploadBlogHandler)

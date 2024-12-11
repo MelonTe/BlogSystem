@@ -343,6 +343,12 @@ func UpdateBlog(update request.BlogUpdate) error {
 
 	// 更新标签
 	if len(update.Tag) > 0 {
+		// 先获取原博客的所有标签
+		var oldTags []table.BlogTag
+		if err := db.DB.Where("blog_title = ?", blog.Title).Find(&oldTags).Error; err != nil {
+			return err
+		}
+
 		// 先删除旧标签
 		if err := db.DB.Where("blog_title = ?", blog.Title).Delete(&table.BlogTag{}).Error; err != nil {
 			return err
@@ -350,12 +356,46 @@ func UpdateBlog(update request.BlogUpdate) error {
 
 		// 添加新标签
 		for _, tag := range update.Tag {
-			newTag := table.BlogTag{
+			var existingTag table.Tag
+			result := db.DB.Where("name = ?", tag).First(&existingTag)
+			if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+				// 如果标签不存在，则创建新标签
+				newTag := table.Tag{
+					Name:  tag,
+					Count: 1,
+				}
+				if err := db.DB.Create(&newTag).Error; err != nil {
+					return err
+				}
+			} else {
+				// 如果标签存在，则更新计数
+				existingTag.Count++
+				if err := db.DB.Save(&existingTag).Error; err != nil {
+					return err
+				}
+			}
+
+			// 创建blog和tag的关联条目
+			newBlogTag := table.BlogTag{
 				BlogTitle: blog.Title,
 				TagName:   tag,
 			}
-			if err := db.DB.Create(&newTag).Error; err != nil {
+			if err := db.DB.Create(&newBlogTag).Error; err != nil {
 				return err
+			}
+		}
+
+		// 检查并删除不再与任何博客关联的旧标签
+		for _, oldTag := range oldTags {
+			var count int64
+			if err := db.DB.Model(&table.BlogTag{}).Where("tag_name = ?", oldTag.TagName).Count(&count).Error; err != nil {
+				return err
+			}
+			if count == 0 {
+				// 如果该标签不再与任何博客关联，则删除该标签
+				if err := db.DB.Where("name = ?", oldTag.TagName).Delete(&table.Tag{}).Error; err != nil {
+					return err
+				}
 			}
 		}
 	}

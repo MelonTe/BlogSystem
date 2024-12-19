@@ -227,51 +227,75 @@ func BlogAndTagNums() response.BlogAndTagNums {
 	return NumsCount
 }
 
-func GetBlogList(criteria request.BlogCriteria) ([]response.BlogWithTag, error) {
+func GetBlogList(criteria request.BlogCriteria) (*response.BlogList, error) {
 	var blogs []table.Blog
-	var result []response.BlogWithTag
+	var blogList []response.BlogWithTag
 
-	// 构建查询条件
+	// 查询博客列表
 	query := db.DB.Model(&table.Blog{})
 
-	// 根据博客名关键字进行筛选
 	if criteria.BlogName != "" {
 		query = query.Where("title LIKE ?", "%"+criteria.BlogName+"%")
 	}
 
-	// 根据标签进行筛选
 	if len(criteria.Tag) > 0 {
 		query = query.Joins("JOIN blog_tags ON blog_tags.blog_title = blogs.title").
 			Where("blog_tags.tag_name IN ?", criteria.Tag).
 			Group("blogs.id")
 	}
 
-	// 根据时间排序
 	query = query.Order("created_at DESC")
 
-	// 获取博客数量范围
 	if criteria.Start < 0 || criteria.End < criteria.Start {
 		return nil, errors.New("invalid start or end range")
 	}
 
-	// 查询博客
 	if err := query.Offset(criteria.Start - 1).Limit(criteria.End - criteria.Start + 1).Find(&blogs).Error; err != nil {
 		return nil, err
 	}
 
-	// 查询博客对应的标签
 	for _, blog := range blogs {
 		var tags []string
 		if err := db.DB.Model(&table.BlogTag{}).Where("blog_title = ?", blog.Title).Pluck("tag_name", &tags).Error; err != nil {
 			return nil, err
 		}
-		result = append(result, response.BlogWithTag{
-			Blog: blog,
-			Tag:  tags,
+		blogList = append(blogList, response.BlogWithTag{
+			Blog: table.Blog{
+				ID:        blog.ID,
+				Title:     blog.Title,
+				CreatedAt: blog.CreatedAt,
+				UpdatedAt: blog.UpdatedAt,
+				Content:   blog.Content[:100], // 保证返回的博客只有前100个字
+			},
+			Tag: tags,
 		})
 	}
 
-	return result, nil
+	// 查询博客总数
+	var count int64
+	countQuery := db.DB.Model(&table.Blog{})
+
+	if criteria.BlogName != "" {
+		countQuery = countQuery.Where("title LIKE ?", "%"+criteria.BlogName+"%")
+	}
+
+	if len(criteria.Tag) > 0 {
+		countQuery = countQuery.Joins("JOIN blog_tags ON blog_tags.blog_title = blogs.title").
+			Where("blog_tags.tag_name IN ?", criteria.Tag).
+			Group("blogs.id")
+	}
+
+	if err := countQuery.Count(&count).Error; err != nil {
+		return nil, err
+	}
+
+	// 组合返回结果
+	result := response.BlogList{
+		Blogs: blogList,
+		Count: count,
+	}
+
+	return &result, nil
 }
 
 func DeleteBlog(blogName string) error {

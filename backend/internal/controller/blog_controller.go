@@ -19,7 +19,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param criteria body request.BlogCriteria true "字段为空表示获取所有博客"
-// @Success 200 {object} response.Response{data=[]response.BlogWithTag} "请求成功"
+// @Success 200 {object} response.Response{data=response.BlogList} "请求成功"
 // @Router /bloglist [POST]
 func GetBlogListHandler(c *gin.Context) {
 	var criteria request.BlogCriteria
@@ -28,13 +28,13 @@ func GetBlogListHandler(c *gin.Context) {
 		return
 	}
 
-	blogs, err := service.GetBlogList(criteria)
+	result, err := service.GetBlogList(criteria)
 	if err != nil {
 		response.ResponseFail(c, err.Error(), 500)
 		return
 	}
 
-	response.ResponseSuccess(c, blogs)
+	response.ResponseSuccess(c, result)
 }
 
 // UploadBlogHandler godoc

@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import './APlayer.min.js';
-import './Meting.min.js';
-import "./APlayer.min.css";
+import './APlayerMin.js';
+import './MetingMin.js';
+import "./APlayerMin.css";
 </script>

@@ -36,16 +36,21 @@ async function loginUser() {
     if (loginHTML.value) {
         loginHTML.value.classList.add("login-loading")
     }
-    
-    const token : string = await login(loginData.value);
+
+    const token: string = await login(loginData.value);
     console.log(token);
-    
-    if(token){
+
+    if (token) {
         setToken(token);
-        setTimeout(()=>{
+        setTimeout(() => {
             emitter.emit("loginSuccess");
-            router.push({name:'home'});
-        },1000)
+            router.push({ name: 'home' });
+        }, 1000)
+    } else {
+        setTimeout(() => {
+            if (loginHTML.value)
+                loginHTML.value.classList.remove("login-loading")
+        }, 1000)
     }
 }
 </script>

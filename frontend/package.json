@@ -13,6 +13,7 @@
   "dependencies": {
     "@kangc/v-md-editor": "^2.3.18",
     "@mdit/plugin-figure": "^0.14.0",
+    "aplayer": "^1.10.1",
     "axios": "^1.7.7",
     "element-plus": "^2.9.1",
     "github-markdown-css": "^5.7.0",

@@ -4,11 +4,15 @@ import (
 	"BlogSystem/internal/model/request"
 	"BlogSystem/internal/model/response"
 	"BlogSystem/internal/service"
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"sort"
+
+	"github.com/gin-gonic/gin"
+
+	_ "BlogSystem/internal/model/request"
+
+	_ "BlogSystem/internal/model/response"
 )
-import _ "BlogSystem/internal/model/request"
-import _ "BlogSystem/internal/model/response"
 
 // UploadMessageHandler godoc
 // @Summary 用于上传留言的接口
@@ -102,6 +106,10 @@ func GetMessageHandler(c *gin.Context) {
 		response.ResponseFail(c, "范围界限异常", 400)
 		return
 	}
+	//倒置
+	sort.Slice(messages, func(i, j int) bool {
+		return i > j
+	})
 	count := len(messages)
 	if MRange.End < len(messages) {
 		messages = messages[MRange.Start:MRange.End]

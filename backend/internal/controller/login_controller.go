@@ -6,8 +6,9 @@ import (
 	"BlogSystem/internal/model/response"
 	_ "BlogSystem/internal/model/response"
 	"BlogSystem/internal/service"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // LoginHandler godoc
@@ -23,7 +24,7 @@ func LoginHandler(c *gin.Context) {
 	p := new(request.LoginData)
 	if err := c.ShouldBindJSON(p); err != nil {
 		c.JSON(http.StatusBadRequest, response.Response{
-			Code:    400,
+			Code:    403,
 			Message: "参数错误",
 		})
 		return
@@ -31,7 +32,7 @@ func LoginHandler(c *gin.Context) {
 	token, err := service.Login(p)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.Response{
-			Code:    400,
+			Code:    402,
 			Message: err.Error(),
 		})
 		return

@@ -111,9 +111,7 @@ func GetMessageHandler(c *gin.Context) {
 		return i > j
 	})
 	count := len(messages)
-	if MRange.End < len(messages) {
 		messages = messages[MRange.Start:MRange.End]
-	}
 	msgs := response.MessagesWithCount{
 		Msgs:  messages,
 		Count: count,

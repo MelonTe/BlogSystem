@@ -21,12 +21,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import emitter from '@/utils/mittUtils';
+import { nextTick, onMounted, ref, watch } from 'vue';
 
 const { headLevel } = defineProps<{ headLevel: number }>();
 
+emitter.on('ArticleLoaded', () => {
+    nextTick(() => {
+        getArticleOutline();
+    })
+});
+
 onMounted(() => {
-    getArticleOutline();
     window.addEventListener('scroll', onScroll);
 });
 
@@ -106,7 +112,7 @@ function onScroll() {
 
     activeId.value = topHeader.id;
     activeHeaders.value[level] = topHeader.id;
-    for (let i = level+1; i < activeHeaders.value.length; i++)
+    for (let i = level + 1; i < activeHeaders.value.length; i++)
         activeHeaders.value[i] = '';
 
     recursion(level, activeItem);

@@ -72,3 +72,20 @@
   opacity: 1;
   transform: translateY(0px);
 }
+
+.login-operate{
+  display: flex;
+  margin-top: 1em;
+  margin-left: 60%;
+}
+
+.operate-button{
+  outline: none;
+  border: none;
+  padding: 0.45em 1em;
+  margin: 0.5em;
+  border-radius: 1em;
+  color: #f3f3f3;
+  font-weight: bold;
+  box-shadow: inset 0 0 3px #f3f3f3, 0 0 2px #a0a0a0;
+}

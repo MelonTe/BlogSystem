@@ -113,10 +113,13 @@
 }
 
 .tagsText{
-  width: 80%;
+  height: 1.2em;
+  padding: 0.5em 1em;
+  width: 75%;
 }
 
 .tagsDelete{
+  height: 2.2em;
   width: 14%;
   background-color: #ffffff;
   color: #000;

@@ -22,8 +22,7 @@ onMounted(async () => {
   renderedText.value = MdRender(blogDetail.Content, "markdown");
 
   delete blogDetail.Content;
-  console.log(blogDetail);
-
+  
   nextTick(() => {
     emitter.emit('ArticleLoaded'); // 通知ArticleOutline
     emitter.emit('TitleLoaded', blogDetail); // 通知ArticleTitle

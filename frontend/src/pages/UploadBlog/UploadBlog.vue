@@ -3,12 +3,13 @@
         <div class="form">
 
             <div class="inputf">
-                <input class="textarea" v-model="blogData.blogname" type="text" placeholder="" />
+                <textarea class="textarea" v-model="blogData.blogname" type="text" placeholder="" maxlength="20" />
                 <span class="label">标题</span>
             </div>
 
             <div class="inputf tagsContent" v-for="(tag, index) in blogData.tag">
-                <input class="textarea tagsText" v-model="blogData.tag[index]" type="text" placeholder="" />
+                <textarea class="textarea tagsText" v-model="blogData.tag[index]" type="text" placeholder=""
+                    maxlength="10" />
                 <span class="label">标签 {{ index + 1 }}</span>
                 <button class="button tagsDelete tags" @click="deleteTag(index)">-</button>
             </div>
@@ -50,23 +51,23 @@ const blogData = ref({
 // 获取需要提交的文件
 const dirName = ref("");
 let mdFile: any = null;
-let imageFiles: any = [];
+let formData: any;
 const imageFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif'];
 const getDirData = async () => {
     try {
+        mdFile = null;
+        dirName.value = "";
+        formData = new FormData();
         // 读取文件夹
         const handle = await (window as any).showDirectoryPicker();
         // 寻找图片与markdown文件
-        mdFile = null;
-        imageFiles = [];
-        dirName.value = "";
         await processHandle(handle);
+        // 判断该文件夹是否有效
         if (mdFile !== null) {
             dirName.value = handle.name;
         } else {
             ElMessage.error("没有检测到markdown");
         }
-
     }
     catch {
         ElMessage.error("读取文件夹失败");
@@ -84,8 +85,8 @@ async function processHandle(handle: any) {
             mdFile = await handle.getFile();
             ElMessage.success("成功获取：" + mdFile.name);
         }
-        if (imageFormats.includes(fileType.toLowerCase())) {
-            imageFiles.push(await handle.getFile())
+        else if (imageFormats.includes(fileType.toLowerCase())) {
+            formData.append("images", await handle.getFile())
         }
     }
 }
@@ -95,6 +96,7 @@ watch(blogData, (newValue, oldValue) => {
     // 禁止换行和空格
     for (let i = 0; i < newValue.tag.length; i++)
         blogData.value.tag[i] = newValue.tag[i].replace("\n", "").replace(" ", "")
+    blogData.value.blogname = newValue.blogname.replace("\n", "").replace(" ", "")
 }, { deep: true })
 
 // 标签
@@ -122,14 +124,17 @@ async function confirmUpload() {
         // 清除空标签
         for (let i = 0; i < blogData.value.tag.length; i++)
             if (!blogData.value.tag[i]) {
-                ElMessage.error("存在空标签：第" + (i+1) + "项")
+                ElMessage.error("存在空标签：第" + (i + 1) + "项")
                 return;
             }
         //上传
-        let formData : any = new FormData();
-        formData.append('markdown', new File([mdFile], blogData.value.blogname+".md", { type: mdFile.type }));
-        formData.append('images', imageFiles);
+        formData.append('markdown', new File([mdFile], blogData.value.blogname + ".md", { type: mdFile.type }));
+
         formData.append('tags', blogData.value.tag);
+        
+        formData.forEach((item: any) => {
+            console.log(item)
+        })
 
         await uploadBlog(formData);
         router.push({ name: "home" });

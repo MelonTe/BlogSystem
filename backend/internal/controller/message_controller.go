@@ -4,6 +4,8 @@ import (
 	"BlogSystem/internal/model/request"
 	"BlogSystem/internal/model/response"
 	"BlogSystem/internal/service"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"sort"
 
@@ -35,6 +37,7 @@ func UploadMessageHandler(c *gin.Context) {
 	}
 	// 调用service层逻辑，对留言进行处理
 	if err := service.UploadMessage(req.Message); err != nil {
+		
 		// 对错误进行处理
 		c.JSON(http.StatusInternalServerError, response.Response{
 			Code:    http.StatusInternalServerError,
@@ -57,10 +60,18 @@ func UploadMessageHandler(c *gin.Context) {
 // @Success 200 {object} response.Response{data=nil} "请求成功"
 // @Router /api/message [DELETE]
 func DeleteMessageHandler(c *gin.Context) {
+	body, err := ioutil.ReadAll(c.Request.Body)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to read request body"})
+			return
+		}
+
+		// 打印原始的JSON数据
+		fmt.Printf("Received raw JSON: %s\n", body)
 	var req request.MessageWithTime
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, response.Response{
-			Code:    400,
+			Code:    409,
 			Message: "参数错误",
 		})
 		return

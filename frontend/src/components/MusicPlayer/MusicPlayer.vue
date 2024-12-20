@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import './MusicPlayer/APlayer.min.js';
-import './MusicPlayer/Meting.min.js';
-import "./MusicPlayer/APlayer.min.css";
+import './APlayer.min.js';
+import './Meting.min.js';
+import "./APlayer.min.css";
 </script>

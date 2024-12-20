@@ -50,7 +50,7 @@ func InitRouter() *gin.Engine {
 	r.POST("/messagerange", controller.GetMessageHandler)
 	protected.Use(auth.JWTAuthMiddleWare())
 	{
-		protected.DELETE("/message", controller.DeleteMessageHandler)
+		protected.POST("/deletemessage", controller.DeleteMessageHandler)
 	}
 
 	return r

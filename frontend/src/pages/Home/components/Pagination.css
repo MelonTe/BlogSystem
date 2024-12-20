@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .paginator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+  
+  .pages {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .page-btn,
+  .page-input,
+  .page-input-button {
+    height: 2.5em;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #353535;
+    color: #bbbbbb;
+    box-shadow: inset 0 0px 10px rgba(0, 0, 0, 0.719), 0 2px 5px rgba(0, 0, 0, 0.747);
+    transition: all 500ms;
+  }
+  
+  .page-btn {
+    width: 2.5em;
+  }
+  
+  .page-input {
+    width: 5em;
+  }
+  
+  .page-input-button {
+    width: 3em;
+  }
+  
+  .page-btn.active,
+  .page-input-button:active {
+    color: #fff;
+    text-shadow: 0 0 20px rgb(255, 224, 27), 0 0 20px rgb(255, 224, 27), 0 0 20px rgb(255, 224, 27), 0 0 20px rgb(255, 224, 27), 0 0 20px rgb(255, 224, 27), 0 0 20px rgb(255, 224, 27), 0 0 20px rgb(255, 224, 27), 0 0 20px rgb(255, 224, 27);
+  }
+  
+  .page-btn:not(.active):hover,
+  .input-page button:hover {
+    color: #000000;
+    line-height: 40px;
+    background-color: #f0f0f0;
+  }

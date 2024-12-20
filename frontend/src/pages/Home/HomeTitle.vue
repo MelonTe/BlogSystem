@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 import { load } from 'jinrishici';
 import { useTypingEffect, setTypingWords } from '@/hooks/useTyping'; // 引用打字机效果
 
@@ -23,7 +23,7 @@ const { typingWords, startTyping } = useTypingEffect(fetchData);
 
 // 随机古诗词Api
 async function fetchData() {
-    load(result => {
+    await load(result => {
         const content: string = result?.data?.content || "";
         const author: string = result?.data?.origin?.author || "";
         setTypingWords(content + "  ——" + author); // 设置打字机内容
@@ -35,8 +35,10 @@ async function fetchData() {
 
 // 挂载组件后立即启动
 onMounted(() => {
-    fetchData();
-    window.addEventListener('scroll', handleScroll);
+    nextTick(() => {
+        fetchData();
+        window.addEventListener('scroll', handleScroll);
+    })
 });
 
 // 下拉提示

@@ -15,7 +15,9 @@ const titleContainer = ref<HTMLElement | null>(null);
 const titles = [
     { path: '/tags', name: 'Tags-标签' },
     { path: '/about', name: 'About-关于' },
-    { path: '/login', name: '管理员登录' }
+    { path: '/login', name: '管理员登录' },
+    { path: '/modify', name: '修改博客内容' },
+    { path: '/upload', name: '上传博客' },
 ];
 
 const titleChange = () => {

@@ -26,16 +26,16 @@
     </RouterView>
   </div>
 
-  <Music/>
+  <Music />
 
-  <Footer/>
+  <Footer />
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, onUpdated, provide, ref } from 'vue';
+import { nextTick, onUpdated, ref } from 'vue';
 import Footer from './components/Footer.vue';
-import Header from './components/Header.vue';
-import Music from './components/MusicPlayer.vue';
+import Header from './components/Header/Header.vue';
+import Music from './components/MusicPlayer/MusicPlayer.vue';
 import dynamicHeight from '@/hooks/useDynamicHeight';
 
 const contentContainer = ref<HTMLElement | null>(null);
@@ -52,7 +52,6 @@ const items: { icon: string, label: string, route: string }[] = [
   { icon: 'icon-shequ', label: '首页', route: '/home' },
   { icon: 'icon-shequ', label: '标签', route: '/tags' },
   { icon: 'icon-shequ', label: '关于', route: '/about' },
-  { icon: 'icon-shequ', label: '管理员登录', route: '/login' },
 ];
 
 </script>

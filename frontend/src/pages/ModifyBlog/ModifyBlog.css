@@ -1,0 +1,127 @@
+.modify::after {
+  content: "";
+  position: absolute;
+  inset: 1em;
+  background-color: #fdf7f1;
+  border-color: black;
+  border-radius: 2em;
+  transition: 0.5s;
+}
+
+.modify {
+  position: relative;
+  width: 10vw;
+  min-height: 70vh;
+  margin: 5vh 0 5vh 0;
+  padding: 3em 0em;
+
+  box-sizing: border-box;
+  border-radius: 2em;
+  box-shadow: 0 5px 25px #d28636;
+
+  transition: 0.5s;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  caret-color: transparent;
+}
+
+.form {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+  caret-color: transparent;
+}
+
+.inputf {
+  display: flex;
+  width: 100%;
+  position: relative;
+  margin-bottom: 6%;
+}
+
+.button {
+  width: 100%;
+  height: 35px;
+
+  color: #ffffff;
+  background-color: #1dcc66;
+  outline: none;
+
+  border-radius: 0.5em;
+
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.textarea {
+  resize: none;
+  
+  width: 100%;
+  height: 1em;
+
+  border: none;
+  outline: 1.5px solid #ffb973;
+  border-radius: 0.1em;
+
+  font: 0.9em 宋体;
+  white-space: nowarp;
+
+  padding: 0.5em 1em;
+
+  caret-color: black;
+}
+
+.textarea:focus {
+  outline: 1.5px solid #ff8000;
+}
+.textarea::placeholder {
+  opacity: 0;
+}
+.textarea:focus + .label,
+.textarea:not(:placeholder-shown) + .label {
+  opacity: 1;
+  top: -24px;
+  color: black;
+  font-weight: bold;
+}
+.label {
+  position: absolute;
+  top: 0.3em;
+  left: 1em;
+  font-size: 1em;
+  transition: 0.25s ease-out;
+  opacity: 1;
+  color: #757575;
+}
+
+.resize {
+  min-height: 60vh;
+  resize: vertical;
+  overflow-y: scroll;
+}
+
+.tagsContent{
+  justify-content: space-between;
+  
+}
+
+.tagsText{
+  width: 80%;
+}
+
+.tagsDelete{
+  width: 14%;
+  background-color: #ffffff;
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 1px;
+}

@@ -43,15 +43,12 @@ func InitRouter() *gin.Engine {
 		protected.POST("/uploadblog", controller.UploadBlogHandler)
 		protected.DELETE("/blog", controller.DeleteBlogHandler)
 		protected.PUT("/blog", controller.UpdateBlogHandler)
+		protected.DELETE("/deletemessage", controller.DeleteMessageHandler)
 	}
 
 	// --message--
 	r.POST("/message", controller.UploadMessageHandler)
 	r.POST("/messagerange", controller.GetMessageHandler)
-	protected.Use(auth.JWTAuthMiddleWare())
-	{
-		protected.DELETE("/message", controller.DeleteMessageHandler)
-	}
 
 	return r
 }

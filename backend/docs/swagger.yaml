@@ -228,7 +228,7 @@ paths:
       summary: 该接口用于进行博文修改
       tags:
       - Blog
-  /api/message:
+  /api/deletemessage:
     delete:
       consumes:
       - application/json

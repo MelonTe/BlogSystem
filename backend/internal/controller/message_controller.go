@@ -55,7 +55,7 @@ func UploadMessageHandler(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Param messagewithtime body request.MessageWithTime true "留言详情"
 // @Success 200 {object} response.Response{data=nil} "请求成功"
-// @Router /api/message [DELETE]
+// @Router /api/deletemessage [DELETE]
 func DeleteMessageHandler(c *gin.Context) {
 	var req request.MessageWithTime
 	if err := c.ShouldBindJSON(&req); err != nil {

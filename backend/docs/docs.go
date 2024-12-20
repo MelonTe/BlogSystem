@@ -154,7 +154,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/message": {
+        "/api/deletemessage": {
             "delete": {
                 "security": [
                     {

@@ -10,3 +10,7 @@ type MessageWithTime struct {
 	Message
 	CreatedAt time.Time `json:"createdtime" binding:"required"`
 }
+type MessageWithRange struct {
+	Start int `json:"start"`
+	End   int `json:"end"`
+}

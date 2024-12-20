@@ -78,8 +78,9 @@ func DeleteMessageHandler(c *gin.Context) {
 // @Tags Message
 // @Accept json
 // @Produce json
-// @Success 200 {object} response.Response{data=[]response.MessageWithTime} "请求成功"
-// @Router /message [GET]
+// @Param messagewithrange body request.MessageWithRange true "留言范围"
+// @Success 200 {object} response.Response{data=response.MessagesWithCount} "请求成功"
+// @Router /messagerange [POST]
 func GetMessageHandler(c *gin.Context) {
 	messages, err := service.GetMessage()
 	if err != nil {
@@ -89,10 +90,30 @@ func GetMessageHandler(c *gin.Context) {
 		})
 		return
 	}
+	var MRange request.MessageWithRange
+	if err := c.ShouldBindJSON(&MRange); err != nil {
+		c.JSON(http.StatusBadRequest, response.Response{
+			Code:    400,
+			Message: "范围绑定失败",
+		})
+		return
+	}
+	if MRange.Start < 0 || MRange.End < MRange.Start {
+		response.ResponseFail(c, "范围界限异常", 400)
+		return
+	}
+	count := len(messages)
+	if MRange.End < len(messages) {
+		messages = messages[MRange.Start:MRange.End]
+	}
+	msgs := response.MessagesWithCount{
+		Msgs:  messages,
+		Count: count,
+	}
 	// 返回留言数据
 	c.JSON(http.StatusOK, response.Response{
 		Code:    200,
-		Data:    messages,
+		Data:    msgs,
 		Message: "获取全部留言成功",
 		Success: true,
 	})

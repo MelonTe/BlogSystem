@@ -409,10 +409,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/response.BlogWithTag"
-                                            }
+                                            "$ref": "#/definitions/response.BlogList"
                                         }
                                     }
                                 }
@@ -469,42 +466,6 @@ const docTemplate = `{
             }
         },
         "/message": {
-            "get": {
-                "description": "该接口用于获取所有的留言",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Message"
-                ],
-                "summary": "用于获取留言的接口",
-                "responses": {
-                    "200": {
-                        "description": "请求成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/response.MessageWithTime"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "该接口用于用户上传字符串类型的留言",
                 "consumes": [
@@ -541,6 +502,52 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/messagerange": {
+            "post": {
+                "description": "该接口用于获取所有的留言",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Message"
+                ],
+                "summary": "用于获取留言的接口",
+                "parameters": [
+                    {
+                        "description": "留言范围",
+                        "name": "messagewithrange",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.MessageWithRange"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "请求成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.MessagesWithCount"
                                         }
                                     }
                                 }
@@ -663,6 +670,17 @@ const docTemplate = `{
                 }
             }
         },
+        "request.MessageWithRange": {
+            "type": "object",
+            "properties": {
+                "end": {
+                    "type": "integer"
+                },
+                "start": {
+                    "type": "integer"
+                }
+            }
+        },
         "request.MessageWithTime": {
             "type": "object",
             "required": [
@@ -685,6 +703,20 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "tagcount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.BlogList": {
+            "type": "object",
+            "properties": {
+                "blogs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.BlogWithTag"
+                    }
+                },
+                "count": {
                     "type": "integer"
                 }
             }
@@ -724,6 +756,20 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "response.MessagesWithCount": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "msgs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.MessageWithTime"
+                    }
                 }
             }
         },

@@ -1,6 +1,6 @@
 <template>
   <Transition name="default" mode="out-in" appear>
-    <RouterLink :to="{name:'home' , query : {tags:[tag.tagname]}}" class="tagItem">
+    <RouterLink :to="{name:'tagSelected' , query : {tags:[tag.tagname]}}" class="tagItem">
       <span style="margin-right: auto ;">{{ tag.tagname }}</span>
       <span>{{ tag.count }}</span>
     </RouterLink>

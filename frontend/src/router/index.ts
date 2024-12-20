@@ -81,6 +81,24 @@ const router = createRouter({
         title: PagesTitle,
       },
     },
+    {
+      name: "search",
+      path: "/",
+      components: {
+        default: Home,
+        title: PagesTitle,
+        rightsidebar: RightSidebar,
+      },
+    },
+    {
+      name: "tagSelected",
+      path: "/",
+      components: {
+        default: Home,
+        title: PagesTitle,
+        rightsidebar: RightSidebar,
+      },
+    },
   ],
 });
 

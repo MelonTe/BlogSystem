@@ -74,7 +74,7 @@ emitter.on("loginSuccess", ()=>{
 // 搜索功能
 const searchContent = ref();
 const searchClick = () => {
-    router.push({ name: "home", query: { blogname: searchContent.value } })
+    router.push({ name: "search", query: { blogname: searchContent.value } })
 }
 
 // 导航栏滑块动效

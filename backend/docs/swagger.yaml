@@ -229,7 +229,7 @@ paths:
       tags:
       - Blog
   /api/deletemessage:
-    delete:
+    post:
       consumes:
       - application/json
       description: 该接口用于删除留言，需要携带留言具体的创建时间，避免删除所有内容一样的留言

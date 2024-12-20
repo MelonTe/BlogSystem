@@ -7,7 +7,7 @@ type Message struct {
 }
 
 type MessageWithTime struct {
-	Message
+	Message   string    `json:"message" binding:"required"`
 	CreatedAt time.Time `json:"createdtime" binding:"required"`
 }
 type MessageWithRange struct {

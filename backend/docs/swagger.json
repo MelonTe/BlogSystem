@@ -148,7 +148,7 @@
             }
         },
         "/api/deletemessage": {
-            "delete": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []

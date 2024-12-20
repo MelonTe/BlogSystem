@@ -155,7 +155,7 @@ const docTemplate = `{
             }
         },
         "/api/deletemessage": {
-            "delete": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []

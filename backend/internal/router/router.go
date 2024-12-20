@@ -43,7 +43,7 @@ func InitRouter() *gin.Engine {
 		protected.POST("/uploadblog", controller.UploadBlogHandler)
 		protected.DELETE("/blog", controller.DeleteBlogHandler)
 		protected.PUT("/blog", controller.UpdateBlogHandler)
-		protected.DELETE("/deletemessage", controller.DeleteMessageHandler)
+		protected.POST("/deletemessage", controller.DeleteMessageHandler)
 	}
 
 	// --message--

@@ -24,9 +24,9 @@
                     注意：图片与md放在同一文件夹, 文件夹内只能存在一个md文件。
                 </span>
                 <strong style="color: #6f6f6f; font-size: 13px; margin-bottom: 5px;">
-                    选中文件夹 : [ {{ (mdFile) ? (" MD文件：'" + mdFile.name + "'， 图片数量：'" + picNumb) + "' " : "" }} ]
+                    选中文件夹 : [ {{ dirName }} ]
                 </strong>
-                <input type="file" ref="directoryPicker" webkitdirectory multiple @change="getDirData">
+                <button class="button tags tagsAdd" @click="getDirData">选择文件夹</button>
             </div>
 
             <div class="inputf">
@@ -49,27 +49,46 @@ const blogData = ref({
 });
 
 // 获取需要提交的文件
-const picNumb = ref(0);
-const mdFile: any = ref(null);
-let picFile: any = [];
+const dirName = ref("");
+let mdFile: any = null;
+let formData: any;
 const imageFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif'];
-const getDirData = async (event: any) => {
-    picFile = [];
-    mdFile.value = null;
-    picNumb.value = 0;
-
-    const fileList = event.target.files;
-    Array.from(fileList).forEach((item: any) => {
-        const fileType = item.name.split('.').pop();
-        if (fileType === 'md' && mdFile.value === null) {
-            mdFile.value = item;
-            ElMessage.success("成功获取：" + mdFile.value.name);
+const getDirData = async () => {
+    try {
+        mdFile = null;
+        dirName.value = "";
+        formData = new FormData();
+        // 读取文件夹
+        const handle = await (window as any).showDirectoryPicker();
+        // 寻找图片与markdown文件
+        await processHandle(handle);
+        // 判断该文件夹是否有效
+        if (mdFile !== null) {
+            dirName.value = handle.name;
+        } else {
+            ElMessage.error("没有检测到markdown");
+        }
+    }
+    catch {
+        ElMessage.error("读取文件夹失败");
+    }
+}
+async function processHandle(handle: any) {
+    if (handle.kind === "directory") {
+        for await (const item of handle.entries()) {
+            await processHandle(item[1]);
+        }
+    }
+    else {
+        const fileType = handle.name.split('.').pop();
+        if (fileType === 'md' && mdFile === null) {
+            mdFile = await handle.getFile();
+            ElMessage.success("成功获取：" + mdFile.name);
         }
         else if (imageFormats.includes(fileType.toLowerCase())) {
-            picFile.push(item);
-            picNumb.value += 1;
+            formData.append("images", await handle.getFile())
         }
-    });;
+    }
 }
 
 // 监视数据
@@ -95,6 +114,7 @@ const AddTag = () => {
     } else {
         ElMessage.error("最多五个标签！")
     }
+
 }
 
 // 确认修改
@@ -108,16 +128,10 @@ async function confirmUpload() {
                 return;
             }
         //上传
-        let formData: any = new FormData();
-
-        formData.append('markdown', new File([mdFile.value], blogData.value.blogname + ".md", { type: mdFile.value.type }));
-
-        picFile.forEach((item: File) => {
-            formData.append("images", item);
-        });
+        formData.append('markdown', new File([mdFile], blogData.value.blogname + ".md", { type: mdFile.type }));
 
         formData.append('tags', blogData.value.tag);
-
+        
         formData.forEach((item: any) => {
             console.log(item)
         })

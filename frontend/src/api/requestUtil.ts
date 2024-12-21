@@ -8,7 +8,7 @@ import "nprogress/nprogress.css";
 
 // 配置新建一个 axios 实例
 const service = axios.create({
-  baseURL: "http://localhost:8080/",
+  baseURL: "http://112.124.9.51:8080/",
   timeout: 50000,
 });
 
@@ -44,9 +44,9 @@ service.interceptors.response.use(
   },
   (error) => {
     NProgress.done(); // 关闭进度条
-    if(error.response.data.code == 401){
+    if (error.response.data.code == 401) {
       removeToken();
-      Promise.reject(ElMessage.error("登录已失效"))
+      Promise.reject(ElMessage.error("登录已失效"));
     }
     return Promise.reject(ElMessage.error(error.response.data.message));
   }

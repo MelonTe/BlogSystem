@@ -20,7 +20,7 @@
         <p class="info-card-summary">{{ infos.Content }}</p>
 
         <!-- 登陆后的操作 -->
-        <div class="login-operate">
+        <div v-if="token" class="login-operate">
           <button class="operate-button" style="background-color: green;" @click="ModifyBlog">修改</button>
           <button class="operate-button" style="background-color: red;" @click="deleteBlog">删除</button>
         </div>
@@ -31,6 +31,8 @@
 
 <script setup lang="ts">
 import { deleteItem } from '@/api/requestApi';
+import { getToken } from '@/stores/tokenUtils';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 interface InfoImpl {
@@ -42,7 +44,7 @@ interface InfoImpl {
   tag: string[];      // 标签
   image: string;
 }
-
+const token = ref(getToken());
 const router = useRouter();
 const props = defineProps<{ infos: InfoImpl }>();
 

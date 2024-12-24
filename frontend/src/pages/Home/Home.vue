@@ -7,11 +7,11 @@
 </template>
 
 <script setup lang="ts">
-import { postBlogList, getBlogTagNums } from '@/api/requestApi';
+import { postBlogList } from '@/api/requestApi';
 import InfoCard from './components/InfoCard.vue';
 import Pagination from './components/Pagination.vue';
 import Message from './components/Message.vue'
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 const route = useRoute();
 const pageItemNum = 9 | 1; // 设置为奇数，保持美观
